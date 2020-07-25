@@ -64,22 +64,39 @@ def calculation_of_initial_data(vysota, dlina, stoyak, stroka):  # 'stroka' -  �
         list1.append(a)
     return dictionary, list1
 
+def calculation_of_all_initial_data(vysota, dlina, stoyak, dlina2=None, stoyak2=None):
+    dictionary1, list1 = calculation_of_initial_data(vysota, dlina, stoyak, 'Стояк 1')
+    if stoyak2:
+        dictionary2, list2 = calculation_of_initial_data(vysota, dlina2, stoyak2, 'Стояк 2')
+        list1 += list2
+        dictionary2.update(dictionary1)
+        dictionary1 = dictionary2
+    return dictionary1, list1
+
 def subsetsum(A, n):
     L = []
     for N in n:
         list1 = []
         res = {0: []}
-        for i in A:
-            newres = dict(res)
-            #print(newres)
-            for v, l in res.items():
-                if v + i < (N - 3):
-                    newres[v + i] = l + [i]
-                elif (N - 3) < v + i <= N:
-                    #print('N = ', N)
-                    list1.append(l + [i])
-                    #return l + [i]
-            res = newres
+        k = 3
+        while not list1:
+            for i in A:
+                newres = dict(res)
+                # print(newres)
+                for v, l in res.items():
+                    if v + i < (N - k):
+                        newres[v + i] = l + [i]
+                    elif (N - k) < v + i <= N:
+                        # print('N = ', N)
+                        list1.append(l + [i])
+                        # return l + [i]
+                res = newres
+            if k < 15:
+                k += 1
+            elif k >= 15:
+                k += 5
+            elif k > 100:
+                break
         L.append(list1)
     return L
     #return None
@@ -129,7 +146,8 @@ def sorty_2(list, list_b):    #Доделать для различного чи
     for i in range(len(list1)):
         x = 0
         for j in list1[i]:
-            x += sum(j)
+            x += j if type(j) == int else sum(j)
+            #x += sum(j)
         list2.append([summa - x, i])
     list2.sort()
     list1 = []
@@ -157,36 +175,40 @@ def vvod():
 def vyvod(dictionary, list, buhty):
     for i in range(len(buhty)):
         print('\n', 'Бухта ' + str(buhty[i]) + ' метров:')
-        print(list[0][i])
-        for j in list[0][i]:
-            print(j, 'm', dictionary[j])
-        print('остаток с бухты: ', str(buhty[i] - sum(list[0][i])), 'м')
-
-
-v = 3
-d = 21
-s = '2, 3, 12, 13-18'
-st = 'Стояк 1'
-if not verification_of_initial_data(s):
-    print('Недопустимые символы в списке этажей. Допускаются только: \n'
-          'цифры, пробел, ",", "-"')
-else:
-    dictionary, A = calculation_of_initial_data(v, d, s, st)
-    # A = [27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69]
-    n = [90, 100, 70.5, 60]
-    # A, n = vvod()
-    L = subsetsum(A, n)
-    if not L[0]:
-        print('Не найден один из вариантов с заданным диапазоном остатков')
-    else:
-        m = iteration_over_all_values(L)
-        if m:
-            p = sorty_2(m, n)
-            vyvod(dictionary, m, n)
+        if type(list[0][i]) == int:
+            for j in list[0]:
+                print(j, 'm', dictionary[j])
+            print('остаток с бухты: ', str(buhty[i] - sum(list[0])), 'м')
         else:
-            print('Невозможно подобрать этажи для всех бухт с заданным остатком')
+            for j in list[0][i]:
+                print(j, 'm', dictionary[j])
+            print('остаток с бухты: ', str(buhty[i] - sum(list[0][i])), 'м')
 
 
+def main():
+    v = 3
+    d = 21
+    d2 = 23
+    s = '2, 7, 12, 18 - 30'
+    s2 = '2, 7, 12, 18 - 30'
+    if not verification_of_initial_data(s):
+        print('Недопустимые символы в списке этажей. Допускаются только: \n'
+              'цифры, пробел, ",", "-"')
+    else:
+        dictionary, A = calculation_of_all_initial_data(v, d, s, d2, s2)
+        # A = [27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69]
+        n = [35, 90, 120, 152]
+        # A, n = vvod()
+        L = subsetsum(A, n)
+        if not L[0]:
+            print('Не найден один из вариантов с заданным диапазоном остатков')
+        else:
+            m = iteration_over_all_values(L)
+            if m:
+                m = sorty_2(m, n)
+                vyvod(dictionary, m, n)
+            else:
+                print('Невозможно подобрать этажи для всех бухт с заданным остатком')
 
-
-
+if __name__ == '__main__':
+    main()

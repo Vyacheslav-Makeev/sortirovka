@@ -1,19 +1,43 @@
 def verification_of_initial_data(stroka):  #Проверяет строку на наличие недопустимых символов
     L = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ' ', ',', '-']
-    for i in L:
-        stroka = stroka.replace(i, '')
-    if len(stroka) == 0:
-        return True
+    if stroka:
+        for i in L:
+            stroka = stroka.replace(i, '')
+        if len(stroka) == 0:
+            return True
     return False
+
+
+def verification_of_initial_data1(stroka):  #Проверяет строку на наличие недопустимых символов
+    L = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ' ', ',']
+    if stroka == '':
+        return True
+    if stroka:
+        for i in L:
+            stroka = stroka.replace(i, '')
+        if len(stroka) == 0:
+            return True
+    return False
+
+
+def leftover_cables(stroka):
+    stroka = stroka.replace(' ', '')
+    list1 = stroka.split(',')
+    for i in range(len(list1)):
+        list1[i] = int(list1[i])
+    return list1
+
 
 def list_of_floors_from_range(range_list, stroka):
     floor_list = []
     for x in range_list:
+        x = x.replace(',', '')
         a = x.split('-')
         floor_list.extend(list(range(int(a[0]), int(a[1]) + 1)))
     list1 = stroka.split(',')
-    for x in list1:
-        floor_list.append(int(x))
+    if stroka:
+        for x in list1:
+            floor_list.append(int(x))
     floor_list.sort()
     return floor_list
 
@@ -53,6 +77,8 @@ def initial_data_processing(stroka):  # Выявляет диапазоны эт
 
 def calculation_of_initial_data(vysota, dlina, stoyak, stroka):  # 'stroka' -  текст обозначающий номер стояка
     floor_list = initial_data_processing(stoyak)
+    if 1 in floor_list:
+        floor_list.remove(1)
     dictionary = {}
     list1 = []
     for x in floor_list:
@@ -146,8 +172,7 @@ def sorty_2(list, list_b):    #Доделать для различного чи
     for i in range(len(list1)):
         x = 0
         for j in list1[i]:
-            x += j if type(j) == int else sum(j)
-            #x += sum(j)
+            x += j if type(j) == int or type(j) == float else sum(j)
         list2.append([summa - x, i])
     list2.sort()
     list1 = []
@@ -173,9 +198,11 @@ def vvod():
     return A, buhty
 
 def vyvod(dictionary, list, buhty):
+    print('list=', list)
     for i in range(len(buhty)):
+        print(i)
         print('\n', 'Бухта ' + str(buhty[i]) + ' метров:')
-        if type(list[0][i]) == int:
+        if type(list[0][i]) == int or type(list[0][i]) == float:
             for j in list[0]:
                 print(j, 'm', dictionary[j])
             print('остаток с бухты: ', str(buhty[i] - sum(list[0])), 'м')
@@ -185,19 +212,38 @@ def vyvod(dictionary, list, buhty):
             print('остаток с бухты: ', str(buhty[i] - sum(list[0][i])), 'м')
 
 
+def vyvod1(dictionary, list, buhty, m):
+    s = ''
+    print('list=', list)
+    for i in range(len(buhty)):
+        s += 'Бухта ' + ' ' + str(buhty[i]) + ' метров:' + '\n'
+        if type(list[m][i]) == int or type(list[m][i]) == float:
+            for j in list[m]:
+                s += str(j) + 'm' + ' ' + dictionary[j] + '\n'
+            s += 'остаток с бухты: ' + str(buhty[i] - sum(list[m])) + 'м' + '\n'
+        else:
+            for j in list[m][i]:
+                s += str(j) + 'm' + ' ' + dictionary[j] + '\n'
+            s += 'остаток с бухты: ' + str(buhty[i] - sum(list[m][i])) + 'м' + '\n\n'
+    return s
+
+
 def main():
     v = 3
-    d = 21
-    d2 = 23
-    s = '2, 7, 12, 18 - 30'
-    s2 = '2, 7, 12, 18 - 30'
+    d = 23.0
+    d2 = None
+    s = '1, 2, 3 - 13'
+    s2 = None
     if not verification_of_initial_data(s):
         print('Недопустимые символы в списке этажей. Допускаются только: \n'
               'цифры, пробел, ",", "-"')
     else:
         dictionary, A = calculation_of_all_initial_data(v, d, s, d2, s2)
+        print(dictionary)
+        for x in dictionary:
+            print(x, ' ', dictionary[x])
         # A = [27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69]
-        n = [35, 90, 120, 152]
+        n = [46, 70, 90]
         # A, n = vvod()
         L = subsetsum(A, n)
         if not L[0]:

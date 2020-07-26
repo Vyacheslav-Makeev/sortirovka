@@ -9,7 +9,7 @@ def verification_of_initial_data(stroka):  #Проверяет строку на
 
 
 def verification_of_initial_data1(stroka):  #Проверяет строку на наличие недопустимых символов
-    L = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ' ', ',']
+    L = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ' ', ',', '.']
     if stroka == '':
         return True
     if stroka:

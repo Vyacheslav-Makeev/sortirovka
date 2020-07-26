@@ -23,23 +23,25 @@ class RaschetApp(App):
         bl0.add_widget(lb1)
         bl0.add_widget(lb2)
 
-        bl1 = BoxLayout(size_hint=(1, 0.08))
+        bl1 = BoxLayout(size_hint=(1, 0.07))
         ti0 = TextInput(font_size=50, size_hint=(0.022, 1), multiline=False)    # Второй этаж
         ti1 = TextInput(font_size=50, size_hint=(0.1, 1), multiline=False)     # Этажи
         bl1.add_widget(ti0)
         bl1.add_widget(ti1)
 
-        bl2 = BoxLayout(size_hint=(1, 0.08))
+        bl2 = BoxLayout(size_hint=(1, 0.07))
         ti2 = TextInput(font_size=50, size_hint=(0.022, 1), multiline=False)    # Второй этаж
         ti3 = TextInput(font_size=50, size_hint=(0.1, 1), multiline=False)     # Этажи
         bl2.add_widget(ti2)
         bl2.add_widget(ti3)
 
         bl4 = BoxLayout()
-        lb6 = Label(font_size=40)
-        lb3 = Label(font_size=40)
-        bl4.add_widget(lb6)
+        lb6 = Label(font_size=40, halign='left', valign='top')
+        lb6.bind(size=lb6.setter('text_size'))
+        lb3 = Label(font_size=40, halign='left', valign='top')
+        lb3.bind(size=lb3.setter('text_size'))
         bl4.add_widget(lb3)
+        bl4.add_widget(lb6)
 
         bl5 = BoxLayout(size_hint=(1, 0.08))
         lb4 = Label(text='Высота этажей, м:', font_size=40, size_hint=(0.01, 1))
@@ -48,7 +50,7 @@ class RaschetApp(App):
         bl5.add_widget(lb5)
 
         bl6 = BoxLayout(size_hint=(1, 0.08))
-        ti4 = TextInput(font_size=50, size_hint=(0.02, 1), multiline=False)    # Высота этажей
+        ti4 = TextInput(text='3', font_size=50, size_hint=(0.02, 1), multiline=False)    # Высота этажей
         ti5 = TextInput(font_size=50, size_hint=(0.02, 1), multiline=False)    # Длины бухт
         bl6.add_widget(ti4)
         bl6.add_widget(ti5)

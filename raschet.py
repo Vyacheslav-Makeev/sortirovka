@@ -5,6 +5,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.config import Config
+from kivy.uix.checkbox import CheckBox
 Config.set('graphics', 'width', 1080)
 Config.set('graphics', 'height', 1920)
 
@@ -17,11 +18,12 @@ class RaschetApp(App):
         self.qwerty = Raschet()
         bl = BoxLayout(orientation='vertical')
         bl0 = BoxLayout(size_hint=(1, 0.08))
-        lb1 = Label(text='2 этаж, м:', font_size=40, size_hint=(0.022, 1))
+        lb1 = Label(text='Длина, м:', font_size=40, size_hint=(0.022, 1))
         lb2 = Label(text='Этажи, через запятую или дефис:', font_size=40, size_hint=(0.1, 1),
                     halign='left', valign='center')
         bl0.add_widget(lb1)
         bl0.add_widget(lb2)
+
 
         bl1 = BoxLayout(size_hint=(1, 0.07))
         ti0 = TextInput(font_size=50, size_hint=(0.022, 1), multiline=False)    # Второй этаж
@@ -55,7 +57,12 @@ class RaschetApp(App):
         bl6.add_widget(ti4)
         bl6.add_widget(ti5)
 
-        L = [ti0, ti1, ti2, ti3, ti4, ti5, lb3, lb6]
+        bl10 = BoxLayout(size_hint=(1, 0.08))
+        lb10 = Label(text='МУС на последнем этаже, этаж:', font_size=40, size_hint=(0.8, 1),
+                    halign='left', valign='center')
+        ti10 = TextInput(font_size=50, size_hint=(0.2, 1), multiline=False)
+
+        L = [ti0, ti1, ti2, ti3, ti4, ti5, lb3, lb6, ti10]
 
         bl3 = BoxLayout(size_hint=(1, 0.08))
         bt0 = Button(text='Расчет')
@@ -68,6 +75,10 @@ class RaschetApp(App):
         bl3.add_widget(bt1)
         bl3.add_widget(bt2)
 
+        bl10.add_widget(lb10)
+        bl10.add_widget(ti10)
+
+        bl.add_widget(bl10)
         bl.add_widget(bl0)
         bl.add_widget(bl1)
         bl.add_widget(bl2)
@@ -96,6 +107,7 @@ class Raschet():
         s = 'Длины, этажи:\n'
         ekran = L1[6]
         ekran2 = L1[7]
+        etag = int(L1[8].text) if L1[8].text else None
         if L1[0].text and sortirovka.verification_of_initial_data1(L1[0].text):
             self.dlina1 = float(L1[0].text)
         else:
@@ -127,7 +139,7 @@ class Raschet():
                           'цифры, пробел, ","')
         else:
             self.dictionary, self.A = sortirovka.calculation_of_all_initial_data(self.vysota, self.dlina1, etagi1,
-                                                                                 self.dlina2, etagi2)
+                                                                                 etag, self.dlina2, etagi2)
             for x in self.dictionary:
                 s += str(x) + 'м' + ' ' + self.dictionary[x] + '\n'
             ekran2.text = s

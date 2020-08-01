@@ -58,7 +58,7 @@ class RaschetApp(App):
         bl6.add_widget(ti5)
 
         bl10 = BoxLayout(size_hint=(1, 0.08))
-        lb10 = Label(text='МУС на последнем этаже, этаж:', font_size=40, size_hint=(0.8, 1),
+        lb10 = Label(text='Если МУС на последнем этаже, этаж:', font_size=40, size_hint=(0.8, 1),
                     halign='left', valign='center')
         ti10 = TextInput(font_size=50, size_hint=(0.2, 1), multiline=False)
 
@@ -108,6 +108,7 @@ class Raschet():
         ekran = L1[6]
         ekran2 = L1[7]
         etag = int(L1[8].text) if L1[8].text else None
+        self.flag = True
         if L1[0].text and sortirovka.verification_of_initial_data1(L1[0].text):
             self.dlina1 = float(L1[0].text)
         else:
@@ -119,10 +120,10 @@ class Raschet():
             self.flag = False
         etagi2 = L1[3].text if L1[3].text != '' else None
         if L1[4].text and sortirovka.verification_of_initial_data1(L1[4].text):
-            self.vysota = int(L1[4].text)
+            self.vysota = float(L1[4].text)
         else:
             self.flag = False
-        if L1[5].text and sortirovka.verification_of_initial_data1(L1[5].text):
+        if L1[5].text and sortirovka.verification_of_initial_data(L1[5].text):
             self.buhty = sortirovka.leftover_cables(L1[5].text)
         else:
             self.flag = False
@@ -136,7 +137,7 @@ class Raschet():
                           'цифры, пробел, ",", "-"')
         elif not self.flag:
             ekran.text = ('Недопустимые символы\nв списке этажей.\nДопускаются только: \n'
-                          'цифры, пробел, ","')
+                          'цифры, пробел, ".", \n для бухт: ","')
         else:
             self.dictionary, self.A = sortirovka.calculation_of_all_initial_data(self.vysota, self.dlina1, etagi1,
                                                                                  etag, self.dlina2, etagi2)

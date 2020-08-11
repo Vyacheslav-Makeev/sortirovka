@@ -41,6 +41,14 @@ class RaschetApp(App):
         lb6 = Label(font_size=40, halign='left', valign='top')
         lb6.bind(size=lb6.setter('text_size'))
         lb3 = Label(font_size=40, halign='left', valign='top')
+        lb3.text = '''Инструкция:
+        Если МУС на последнем этаже - поставить галочку.
+        "Этаж" - номер этажа до которого измерена длина, общий на 2 стояка.
+        "Длина" - длина кабеля на выбранный этаж.
+        "Этажи" - перечислить нужные этажи, через запятую или дефис (например 3, 5, 7-12).
+        "Высота этажей" - высота типичного этажа. Десятичные дроби записывать через ".", а не ",".
+        "Длины бухт" - перечислить длины бухт через запятую.
+        '''
         lb3.bind(size=lb3.setter('text_size'))
         bl4.add_widget(lb3)
         bl4.add_widget(lb6)
@@ -58,11 +66,14 @@ class RaschetApp(App):
         bl6.add_widget(ti5)
 
         bl10 = BoxLayout(size_hint=(1, 0.08))
-        lb10 = Label(text='Если МУС на последнем этаже, этаж:', font_size=40, size_hint=(0.8, 1),
+        lb10 = Label(text='Если МУС на последнем этаже:', font_size=40, size_hint=(0.4, 1),
                     halign='left', valign='center')
-        ti10 = TextInput(font_size=50, size_hint=(0.2, 1), multiline=False)
+        cb = CheckBox(color=(1, 1, 1, 3), size_hint=(0.003, 1))
+        lb11 = Label(text='Этаж: ', font_size=40, size_hint=(0.1, 1),
+                    halign='left', valign='center')
+        ti10 = TextInput(font_size=50, size_hint=(0.15, 1), multiline=False)
 
-        L = [ti0, ti1, ti2, ti3, ti4, ti5, lb3, lb6, ti10]
+        L = [ti0, ti1, ti2, ti3, ti4, ti5, lb3, lb6, ti10, cb]
 
         bl3 = BoxLayout(size_hint=(1, 0.08))
         bt0 = Button(text='Расчет')
@@ -76,6 +87,8 @@ class RaschetApp(App):
         bl3.add_widget(bt2)
 
         bl10.add_widget(lb10)
+        bl10.add_widget(cb)
+        bl10.add_widget(lb11)
         bl10.add_widget(ti10)
 
         bl.add_widget(bl10)
@@ -103,11 +116,13 @@ class Raschet():
     m = []
     flag = True
     k = 0
+    flag1 = False
     def receiving_and_processing_data(self, L1):
         s = 'Длины, этажи:\n'
         ekran = L1[6]
         ekran2 = L1[7]
         etag = int(L1[8].text) if L1[8].text else None
+        flag1 = L1[9].active
         self.flag = True
         if L1[0].text and sortirovka.verification_of_initial_data1(L1[0].text):
             self.dlina1 = float(L1[0].text)
@@ -140,7 +155,7 @@ class Raschet():
                           'цифры, пробел, ".", \n для бухт: ","')
         else:
             self.dictionary, self.A = sortirovka.calculation_of_all_initial_data(self.vysota, self.dlina1, etagi1,
-                                                                                 etag, self.dlina2, etagi2)
+                                                                                 flag1, etag, self.dlina2, etagi2)
             for x in self.dictionary:
                 s += str(x) + 'м' + ' ' + self.dictionary[x] + '\n'
             ekran2.text = s
@@ -154,6 +169,7 @@ class Raschet():
                     ekran.text = sortirovka.vyvod1(self.dictionary, self.m, self.buhty, 0)
                 else:
                     ekran.text = 'Невозможно подобрать этажи\nдля всех бухт с заданным\nостатком'
+        print('________________________________________________________\n_________________________________________')
     def next_set(self, ekran):
         if self.k < len(self.m) - 1:
             self.k += 1

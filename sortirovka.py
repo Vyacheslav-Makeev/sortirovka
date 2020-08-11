@@ -11,22 +11,18 @@ def verification_of_initial_data(stroka):  #Проверяет строку на
 def verification_of_initial_data1(stroka):  #Проверяет строку на наличие недопустимых символов
     L = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ' ', '.']
     if stroka == '':
-        print('111111')
         return True
     if stroka:
         for i in L:
             stroka = stroka.replace(i, '')
         if len(stroka) == 0:
-            print('2222222')
             return True
-    print('False')
     return False
 
 
 def leftover_cables(stroka):
     stroka = stroka.replace(' ', '')
     list1 = stroka.split(',')
-    print(list1)
     for i in range(len(list1)):
         list1[i] = float(list1[i])
 
@@ -80,25 +76,25 @@ def initial_data_processing(stroka):  # Выявляет диапазоны эт
     return floor_list
 
 
-def calculation_of_initial_data(vysota, dlina, stoyak, stroka, floor=None):  # 'stroka' -  текст обозначающий номер стояка
+def calculation_of_initial_data(vysota, dlina, stoyak, stroka, flag, floor):  # 'stroka' -  текст обозначающий номер стояка
     floor_list = initial_data_processing(stoyak)
     if 1 in floor_list:
         floor_list.remove(1)
     dictionary = {}
     list1 = []
     for x in floor_list:
-        if floor:
+        if flag:
             a = dlina + (floor - x) * vysota
         else:
-            a = dlina + (x - 2) * vysota
+            a = dlina + (x - floor) * vysota
         dictionary[a] = stroka + ' этаж ' + str(x)
         list1.append(a)
     return dictionary, list1
 
-def calculation_of_all_initial_data(vysota, dlina, stoyak, etag=None, dlina2=None, stoyak2=None):
-    dictionary1, list1 = calculation_of_initial_data(vysota, dlina, stoyak, 'Стояк 1', etag)
+def calculation_of_all_initial_data(vysota, dlina, stoyak, flag=False, etag=None, dlina2=None, stoyak2=None):
+    dictionary1, list1 = calculation_of_initial_data(vysota, dlina, stoyak, 'Стояк 1', flag, etag)
     if stoyak2:
-        dictionary2, list2 = calculation_of_initial_data(vysota, dlina2, stoyak2, 'Стояк 2')
+        dictionary2, list2 = calculation_of_initial_data(vysota, dlina2, stoyak2, 'Стояк 2', flag, etag)
         list1 += list2
         dictionary2.update(dictionary1)
         dictionary1 = dictionary2
@@ -119,7 +115,10 @@ def subsetsum(A, n):
                         newres[v + i] = l + [i]
                     elif (N - k) < v + i <= N:
                         # print('N = ', N)
-                        list1.append(l + [i])
+                        if l:
+                            l = list(set(l))
+                            l.sort()
+                        list1.append(l + [i]) if i not in l else list1.append(l)
                         # return l + [i]
                 res = newres
             if k < 15:

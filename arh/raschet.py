@@ -118,6 +118,7 @@ class Raschet():
     k = 0
     flag1 = False
     def receiving_and_processing_data(self, L1):
+        #print(L1[0].text, L1[1].text, L1[2].text, L1[3].text, L1[4].text, L1[5].text, L1[6].text, L1[7].text, L1[8].text)
         s = 'Длины, этажи:\n'
         ekran = L1[6]
         ekran2 = L1[7]
@@ -170,6 +171,7 @@ class Raschet():
                 else:
                     ekran.text = 'Невозможно подобрать этажи\nдля всех бухт с заданным\nостатком'
         print('________________________________________________________\n_________________________________________')
+        print(L1[8].text)
     def next_set(self, ekran):
         if self.k < len(self.m) - 1:
             self.k += 1

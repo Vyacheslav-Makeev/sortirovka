@@ -125,7 +125,7 @@ def subsetsum(A, n):
                 k += 1
             elif k >= 15:
                 k += 5
-            elif k > 100:
+            elif k > 300:
                 break
         L.append(list1)
     return L

@@ -1,3 +1,6 @@
+
+
+import time
 class IncomingData:
 
     '''def verification_of_initial_data(self, stroka, valid_characters):
@@ -134,6 +137,7 @@ class Raschet():
         self.list1 = []  # для созданных наборов
 
     def subsetsum(self):
+        print('Start subsetsum: ', time.ctime())
         for N in self.dlina_b:
             res = {0: []}
             list1 = []
@@ -152,15 +156,18 @@ class Raschet():
                                 l.sort()
                             list1.append(l + [i]) if i not in l else list1.append(l)
                     res = newres
-                if k < 15:
-                    k += 1
-                elif k >= 15:
+                if k < 10:
+                    k += 5
+                elif k >= 10:
                     k += 5
 
             self.list.append(list1)
         for i in range(len(self.list)):  # удаляет дубликаты в каждом из списков
             self.list[i] = list(set(tuple(sorted(sub)) for sub in self.list[i]))
             self.list[i] = [list(sub) for sub in self.list[i]]
+        #print(len(self.list[4]))
+        #print(self.list[4])
+        print('Stop subsetsum: ', time.ctime())
 
 
     def proverka(self, a, b):  # Проверяет входят ли члены одного списка в другой, список "а" может быть вложенным
@@ -176,6 +183,7 @@ class Raschet():
         return False
 
     def perebor(self, list_1, list_2):  # Перебирает варианты из двух списков и составляет из них наборы
+        print('Start perebor: ', time.ctime())
         L = []
         flag = True if type(list_1[0][0]) == list else False
         for i in list_1:
@@ -189,16 +197,22 @@ class Raschet():
                     L.append(a)
                 else:
                     continue
+        print('Stop  perebor: ', time.ctime())
         return L
 
+
     def iteration_over_all_values(self):  # Перебирает все возможные варианты
+        print('Start iteration_over_all_values: ', time.ctime())
         self.list1 = self.list[0]
         for i in range(1, len(self.list)):   # вернуть for i in range(1, len(self.list)):
+            print(len(self.list[i]))
             if not self.list1:
                 return False
             self.list1 = self.perebor(self.list1, self.list[i])
+        print('Stop iteration_over_all_values: ', time.ctime())
 
     def sorty_2(self):  # Доделать для различного числа бухт
+        print('Start sorty_2: ', time.ctime())
         summa = sum(self.dlina_b)
         list1 = self.list1[:]
         list2 = []
@@ -212,6 +226,7 @@ class Raschet():
         for i in list2:
             list1.append(self.list1[i[1]])
         self.list1 = list1
+        print('Stop sorty_2: ', time.ctime())
 
     def return_val(self):
         self.subsetsum()
@@ -233,9 +248,9 @@ class Obrabotka():
         self.stoyak2 = a[3].text
         self.vysota = a[4].text
         self.dlina_b = a[5] .text    # список длин бухт
-        self.etag = a[8].text
-        self.output_field = a[6]
-        self.output_field2 = a[7]
+        self.etag = a[6].text
+        self.output_field = a[7]
+        self.output_field2 = a[8]
         self.cb = a[9].active
 
         self.nabor = []    #готовый набор (распределение бухты по этажам)
@@ -277,7 +292,9 @@ class Obrabotka():
         for i in range(len(self.dlina_b)):
             s += 'Бухта %s метров:\n' % str(self.dlina_b[i])
             summa = 0
-            self.nabor_dlin[self.number]
+            if not self.nabor_dlin:
+                self.output_field.text = 'Невозможно подобрать длины для всех бухт'
+                return
             if type(self.nabor_dlin[self.number][i]) == list:
                 for k in self.nabor_dlin[self.number][i]:
                     summa += k
@@ -292,6 +309,7 @@ class Obrabotka():
         for i in self.dictionary_all:
             s1 += str(i) + 'м' + ' ' + self.dictionary_all[i] + '\n'
         self.output_field2.text = s1
+        print(s)
 
     def next(self):
         if self.number < len(self.nabor_dlin):
@@ -307,27 +325,6 @@ class Obrabotka():
         else:
             return
 
-
-class Posrednik():
-
-    def raschet(self, L):
-        self.ob = Obrabotka(L)
-        self.flag1 = self.ob.flag1
-        if not self.flag1:
-            self.ob.vyvod()
-
-    def next_set(self):
-        if not self.flag1:
-            self.ob.next()
-
-    def previous_set(self):
-        if not self.flag1:
-            self.ob.previous()
-
-    def error(self):
-        return
-
-
 if __name__ == '__main__':
 
     dlina = '12'
@@ -338,7 +335,4 @@ if __name__ == '__main__':
     dlina_b = '67'
     etag = '2'
     L = [dlina, stoyak, dlina2, stoyak2, vysota, dlina_b, '', '', etag, False]
-    b = Obrabotka(L)
-    b.vyvod()
-    b.next()
 
